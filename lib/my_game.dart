@@ -9,49 +9,57 @@ import 'goal.dart';
 class PhotoGame extends FlameGame
     with HasKeyboardHandlerComponents, HasCollisionDetection {
   late Player player;
- 
+ late SpriteComponent background;
   late TextComponent scoreText;
   int score = 0;
 
-  @override
-  Future<void> onLoad() async {
-    await super.onLoad();
+@override
+Future<void> onLoad() async {
+  await super.onLoad();
 
-    // BACKGROUND
-    final backgroundImage = await images.load('environments/background.png');
+  // BACKGROUND
+  final backgroundImage =
+      await images.load('environments/background1.png');
 
-    add(
-      SpriteComponent(
-        sprite: Sprite(backgroundImage),
-        size: size,
-        position: Vector2.zero(),
-        priority: -100,
-      ),
-    );
+  final background = SpriteComponent(
+    sprite: Sprite(backgroundImage),
+    position: Vector2.zero(),
+    size: size,
+    priority: -100,
+  );
 
-    // SCORE
-    scoreText = TextComponent(
-      text: 'Score: 0',
-      position: Vector2(20, 20),
-      priority: 100,
-    );
+  add(background);
 
-    add(scoreText);
+  // SCORE
+  scoreText = TextComponent(
+    text: 'Score: 0',
+    position: Vector2(20, 20),
+    priority: 100,
+  );
 
-    // PLAYER
-    player = Player(
-      position: Vector2(100, 200),
-      onCollect: () {
-        score++;
-        scoreText.text = 'Score: $score';
-      },
-      onWin: () {
-        print('🎉 YOU WIN!');
-      },
-    );
+  add(scoreText);
 
-   
-    add(player);
-   
+  // PLAYER
+  player = Player(
+    position: Vector2(100, 200),
+    onCollect: () {
+      score++;
+      scoreText.text = 'Score: $score';
+    },
+    onWin: () {
+      // win logic
+    },
+  );
+
+  add(player);
+}
+
+@override
+void onGameResize(Vector2 gameSize) {
+  super.onGameResize(gameSize);
+
+  if (isLoaded) {
+    background.size = gameSize;
   }
+}
 }
